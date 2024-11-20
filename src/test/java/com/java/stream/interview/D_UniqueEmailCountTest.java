@@ -5,6 +5,9 @@ import com.java.stream.interview.employee.domain_related.Person;
 import com.java.stream.solutions.InterviewProblemSolutions;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -16,7 +19,6 @@ import org.junit.jupiter.api.Test;
  * */
 class D_UniqueEmailCountTest {
   @Test
-  @Disabled
   void findUniqueDomainsWithCount() {
     final var employees =
         List.of(
@@ -34,7 +36,9 @@ class D_UniqueEmailCountTest {
 
     final var mySolution = InterviewProblemSolutions.findUniqueDomainsCount(employees);
 
-    final Map<String, ? extends Number> yourSolution = null;
+    final Map<String, ? extends Number> yourSolution =
+            employees.stream()
+                    .collect(Collectors.groupingBy(p -> p.email().split("@")[1], Collectors.counting()));
 
     Assertions.assertEquals(mySolution, yourSolution);
   }

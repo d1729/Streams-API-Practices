@@ -3,6 +3,7 @@ package com.java.stream.problems.strings;
 import com.github.javafaker.Faker;
 import com.java.stream.solutions.GeneralStringProblemsSolution;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
@@ -17,7 +18,6 @@ class J_SortListBasedOn2ndCharacterTest {
    * @see GeneralStringProblemsSolution#sortListBasedOn2ndCharacter(List)
    */
   @Test
-  @Disabled
   void testSortListBasedOn2ndCharacter() {
     final var fakePersons = Faker.instance().name();
     List<String> input =
@@ -47,7 +47,8 @@ class J_SortListBasedOn2ndCharacterTest {
             fakePersons.name());
 
     List<String> mySolution = GeneralStringProblemsSolution.sortListBasedOn2ndCharacter(input);
-    List<String> yourSolution = Collections.emptyList();
+    List<String> yourSolution = input.stream()
+            .sorted(Comparator.comparing(s -> s.charAt(1))).toList();
 
     Assertions.assertEquals(mySolution, yourSolution);
 

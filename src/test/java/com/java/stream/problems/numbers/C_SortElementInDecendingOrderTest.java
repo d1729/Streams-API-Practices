@@ -1,7 +1,11 @@
 package com.java.stream.problems.numbers;
 
 import com.java.stream.solutions.GeneralNumbersProblemSolution;
+
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -15,11 +19,10 @@ import org.junit.jupiter.api.Test;
 class C_SortElementInDecendingOrderTest {
 
   @Test
-  @Disabled
   public void test() {
     var input = List.of(1, 34, 3, 98, 9, 76, 45, 4);
     var mySolution = GeneralNumbersProblemSolution.getHighestPossibleValue(input);
-    var yourSolution = "";
+    var yourSolution = input.stream().map(String::valueOf).sorted(Collections.reverseOrder()).collect(Collectors.joining(""));
 
     Assertions.assertEquals(mySolution, yourSolution);
   }

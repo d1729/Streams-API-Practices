@@ -2,6 +2,8 @@ package com.java.stream.problems.strings;
 
 import com.java.stream.solutions.GeneralStringProblemsSolution;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -12,11 +14,10 @@ class F_ConcatenationOfStrings {
    * by a comma, using Java 8 Streams.
    */
   @Test
-  @Disabled
   void testConcatenationOfStrings() {
     List<String> input = List.of("Hellow", "World", "Hello", "World");
     final var mySolution = GeneralStringProblemsSolution.concatenateStrings(input);
-    final var yourSolution = "";
+    final var yourSolution = String.join(",", input);
 
     Assertions.assertEquals(mySolution, yourSolution);
   }

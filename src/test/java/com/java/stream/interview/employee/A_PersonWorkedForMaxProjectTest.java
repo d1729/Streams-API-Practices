@@ -22,7 +22,6 @@ import org.junit.jupiter.api.Test;
  */
 class A_PersonWorkedForMaxProjectTest {
   @Test
-  @Disabled()
   public void numberOfOccurencesOfEachCharacter() {
     final var project1 =
         List.of(
@@ -38,7 +37,10 @@ class A_PersonWorkedForMaxProjectTest {
 
     var mySolution = InterviewProblemSolutions.employeesWorkedForMaxProjects(corporateEmployees);
 
-    Employee yourSolution = null; // Assert that the yourSolution output matches the mySolution output
+    Employee yourSolution = corporateEmployees.stream()
+            .max(Comparator.comparing(Employee::projectSize)
+                    .thenComparing(Employee::sumOfProjectDurations))
+            .orElse(null); // Assert that the yourSolution output matches the mySolution output
 
     Assertions.assertEquals(mySolution, yourSolution);
   }

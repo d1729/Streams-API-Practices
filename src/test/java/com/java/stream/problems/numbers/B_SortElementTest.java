@@ -2,6 +2,8 @@ package com.java.stream.problems.numbers;
 
 import com.java.stream.solutions.GeneralNumbersProblemSolution;
 import java.util.List;
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -18,11 +20,13 @@ import org.junit.jupiter.api.Test;
 class B_SortElementTest {
 
   @Test
-  @Disabled
   public void test() {
     var input = List.of(1, 34, 3, 98, 9, 76, 45, 4);
     var mySolution = GeneralNumbersProblemSolution.getSmallestPossibleValue(input);
-    var yourSolution = "";
+    var yourSolution = input.
+            stream().map(String::valueOf).
+            sorted().
+            collect(Collectors.joining(""));
 
     Assertions.assertEquals(mySolution, yourSolution);
   }
