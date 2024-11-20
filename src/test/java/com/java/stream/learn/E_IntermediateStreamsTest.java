@@ -7,12 +7,10 @@ import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.AbstractCollection;
-import java.util.AbstractList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.*;
 
@@ -26,11 +24,13 @@ class E_IntermediateStreamsTest {
      * Convert a list of strings into a list of characters.
      */
     @Test
-    @Disabled
     public void e1_stringsToCharacters() {
         List<String> input = List.of("alfa", "bravo", "charlie");
 
-        List<Character> result = null; // TODO
+        List<Character> result = input.stream()
+                                .flatMap(s -> s.chars().mapToObj(e ->  (char)e))
+                                .toList();
+
 
         Assertions.assertEquals("[a, l, f, a, b, r, a, v, o, c, h, a, r, l, i, e]", result.toString());
         Assertions.assertTrue(result.stream().allMatch(x -> x instanceof Character));
@@ -56,9 +56,9 @@ class E_IntermediateStreamsTest {
      *
      * @throws IOException
      */
-    @Test @Disabled
+    @Test
     public void e2_listOfAllWords() throws IOException {
-        List<String> output = null; // TODO
+        List<String> output = reader.lines().flatMap(SPLIT_PATTERN::splitAsStream).toList();
 
         Assertions.assertEquals(
                 List.of(
@@ -90,9 +90,14 @@ class E_IntermediateStreamsTest {
      *
      * @throws IOException
      */
-    @Test @Disabled
+    @Test
     public void e3_longLowerCaseSortedWords() throws IOException {
-        List<String> output = null; // TODO
+        List<String> output = reader.
+                lines().
+                flatMap(SPLIT_PATTERN::splitAsStream).
+                filter(word -> word.length() >= 8).
+                map(String::toLowerCase).
+                sorted(Comparator.naturalOrder()).toList();
 
         Assertions.assertEquals(
                 List.of(
@@ -113,9 +118,14 @@ class E_IntermediateStreamsTest {
      *
      * @throws IOException
      */
-    @Test @Disabled
+    @Test
     public void e4_longLowerCaseReverseSortedWords() throws IOException {
-        List<String> result = null; // TODO
+        List<String> result = reader.
+                lines().
+                flatMap(SPLIT_PATTERN::splitAsStream).
+                filter(s -> s.length() >= 8).
+                map(String::toLowerCase).
+                sorted(Comparator.reverseOrder()).toList();
 
         Assertions.assertEquals(
                 List.of(
@@ -135,9 +145,14 @@ class E_IntermediateStreamsTest {
      *
      * @throws IOException
      */
-    @Test @Disabled
+    @Test
     public void e5_sortedLowerCaseDistinctByLengthThenAlphabetically() throws IOException {
-        List<String> result = null; // TODO
+        List<String> result = reader.lines()
+                .flatMap(SPLIT_PATTERN::splitAsStream)
+                .map(String::toLowerCase)
+                .distinct()
+                .sorted(Comparator.comparing(String::length).thenComparing(Comparator.naturalOrder()))
+                .toList();
 
         Assertions.assertEquals(
                 List.of(
@@ -169,9 +184,10 @@ class E_IntermediateStreamsTest {
      * Compute the value of 21!, that is, 21 factorial. This value is larger than
      * Long.MAX_VALUE, so you must use BigInteger.
      */
-    @Test @Disabled
+    @Test
     public void e6_bigFactorial() {
-        BigInteger result = BigInteger.ONE; // TODO
+        BigInteger result = IntStream.range(1, 22).mapToObj(BigInteger::valueOf)
+                        .reduce(BigInteger.ONE, BigInteger::multiply);
 
         Assertions.assertEquals(new BigInteger("51090942171709440000"), result);
     }
@@ -192,9 +208,12 @@ class E_IntermediateStreamsTest {
      *
      * @throws IOException
      */
-    @Test @Disabled
+    @Test
     public void e7_getLastWord() throws IOException {
-        String result = null; // TODO
+        String result = reader.
+                lines().
+                flatMap(SPLIT_PATTERN::splitAsStream).
+                reduce("", (a, b) -> b);
 
         Assertions.assertEquals("thee", result);
     }
@@ -206,11 +225,13 @@ class E_IntermediateStreamsTest {
     /**
      * Create a list containing ArrayList.class and all its super classes.
      */
-    @Test @Disabled
+    @Test
     public void e8_selectTheSuperClassesOfArrayList() {
         Class<?> origin = ArrayList.class;
 
-        List<String> result = null; // TODO
+        List<Class<?>> result =
+                Stream.<Class<?>>iterate(origin, Objects::nonNull, Class::getSuperclass)
+                        .toList();
 
         Assertions.assertEquals(
                 List.of(ArrayList.class, AbstractList.class, AbstractCollection.class, Object.class),
@@ -241,7 +262,7 @@ class E_IntermediateStreamsTest {
                                     : s;
                 }).limit(100);
 
-        long count = 0L; // TODO
+        long count = stream.dropWhile(s -> s.length() < 3).count();
 
         Assertions.assertEquals(53, count);
     }
@@ -265,7 +286,7 @@ class E_IntermediateStreamsTest {
     @BeforeEach
     public void z_setUpBufferedReader() throws IOException {
         reader = Files.newBufferedReader(
-                Paths.get("SonnetI.txt"), StandardCharsets.UTF_8);
+                Paths.get("/Users/debarshighosh/Downloads/Streams-API-Practices/src/test/resources/SonnetI.txt"), StandardCharsets.UTF_8);
     }
 
     @AfterEach
